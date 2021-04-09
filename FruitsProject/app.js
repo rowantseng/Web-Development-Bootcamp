@@ -1,57 +1,56 @@
 //jshint esversion:6
 
-const MongoClient = require('mongodb').MongoClient;
-const assert = require('assert');
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost:27017/fruitsDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
-// Connection url
-const url = 'mongodb://localhost:27017';
-
-// Database Name
-const dbName = 'fruitsDB';
-
-// Create a new MongoClient
-const client = new MongoClient(url, { useUnifiedTopology: true });
-
-// Use connect method to connect to the server
-client.connect(function (err) {
-
-    assert.equal(null, err);
-    console.log("Connect successfully to the server");
-
-    const db = client.db(dbName)
-
-    findDocuments(db, function () {
-        client.close();
-    });
+const fruitSchema = new mongoose.Schema({
+    name: String,
+    score: Number,
+    review: String
 });
 
-const insertDocuments = function (db, callback) {
-    const collection = db.collection("fruits")
-    collection.insertMany(
-        [
-            {
-                name: "Apple",
-                score: 8,
-                review: "I like it"
-            },
-            {
-                name: "Orange",
-                score: 6,
-                review: "A little bit sour"
-            },
-            {
-                name: "Banana",
-                score: 9,
-                review: "Great"
-            }
-        ], function (err, result) {
-            assert.equal(err, null);
-            assert.equal(3, result.result.n);
-            assert.equal(3, result.ops.length);
-            console.log("Insertd 3 documents into the collection")
-            callback(result);
-        });
-}
+const personSchema = new mongoose.Schema({
+    name: String,
+    age: Number,
+});
+
+const Fruit = mongoose.model("Fruit", fruitSchema);
+const fruit = new Fruit({
+    name: "Apple",
+    score: 8,
+    review: "I like it"
+});
+// fruit.save();
+
+const Person = mongoose.model("Person", fruitSchema);
+const person = new Person({
+    name: "John",
+    age: 37,
+});
+// person.save();
+
+const kiwi = new Fruit({
+    name: "Kiwi",
+    score: 1,
+    review: "Allergic food"
+});
+const orange = new Fruit({
+    name: "Orange",
+    score: 10,
+    review: "Best fruit ever"
+});
+const banana = new Fruit({
+    name: "Banana",
+    score: 2,
+    review: "It stinks"
+});
+Fruit.insertMany([kiwi, orange, banana], function (err) {
+    if (err) {
+        console.log(err);
+    } else {
+        console.log("Success!");
+    }
+});
 
 const findDocuments = function (db, callback) {
     const collection = db.collection("fruits")
