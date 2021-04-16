@@ -2,73 +2,35 @@
 
 const bodyParser = require("body-parser");
 const express = require("express");
+const date = require(__dirname + "/utils.js");
 
 const app = express();
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static("public"));
 
-let items = ["Buy food", "Cook Food", "Eat Food"];
+const items = ["Buy food", "Cook Food", "Eat Food"];
+const workItems = [];
 
 app.get("/", function(req, res){
-    
-    let today = new Date();
+    const day = date.getDate();
+    res.render("list", {listTitle: day, allItems: items});
+});
 
-    // let currentDay = today.getDay();    
-    // if (currentDay === 6 || currentDay === 0) {
-    //     // res.write("<h1>Yeah it's weekend!</h1>");     // method 1
-    //     // res.sendFile(__dirname + "/weekday.html");    // method 2
-    //     day = "weekend";
-    // } else {
-    //     // res.write("<h1>Boo I have to work...</h1>");  // method 1
-    //     // res.write("<p>It's not the weekend.</p>");
-    //     // res.send();
-    //     // res.sendFile(__dirname + "/weekend.html");    // method 2
-    //     day = "weekday";
-    // }
+app.post("/", function (req, res) {
+    const item = req.body.newItem;
 
-    // switch (currentDay) {
-    //     case 0:
-    //         day = "Sunday";
-    //         break;
-    //     case 1:
-    //         day = "Monday";
-    //         break;    
-    //     case 2:
-    //         day = "Tuesday";
-    //         break;
-    //     case 3:
-    //         day = "Wednesday";
-    //         break;
-    //     case 4:
-    //         day = "Thursday";
-    //         break;
-    //     case 5:
-    //         day = "Friday";
-    //         break;
-    //     case 6:
-    //         day = "Saturday";
-    //         break;
-    //     default:
-    //         console.log("Error: current day is equal to " + day);
-    // }
-
-    // res.render("list", {kindOfDay: day});
-
-    let options = {
-        weekday: "long",
-        day: "numeric",
-        month: "long",
-    };
-
-    let day = today.toLocaleDateString("en-US", options);
-    res.render("list", {kindOfDay: day, allItems: items});
-
-    app.post("/", function (req, res) {
-        let item = req.body.newItem;
+    if (req.body.listBtn === "Work"){
+        workItems.push(item);
+        res.redirect("/work");
+    } else {
         items.push(item);
         res.redirect("/");
-    });
+    }
+});
 
+app.get("/work", function (req, res) {
+    res.render("list", {listTitle: "Work", allItems: workItems})
 });
 
 app.listen(3000, function(){
