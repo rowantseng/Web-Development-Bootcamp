@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Items from "./Items";
 
 function App() {
   const [item, setItem] = useState("");
@@ -11,7 +12,7 @@ function App() {
 
   function handleClick() {
     addItems((prevValue) => {
-      return [...prevValue, <li>{item}</li>];
+      return [...prevValue, item];
     });
 
     // Delete for the next input
@@ -30,7 +31,11 @@ function App() {
         </button>
       </div>
       <div>
-        <ul>{items}</ul>
+        <ul>
+          {items.map((i) => (
+            <Items text={i} />
+          ))}
+        </ul>
       </div>
     </div>
   );
