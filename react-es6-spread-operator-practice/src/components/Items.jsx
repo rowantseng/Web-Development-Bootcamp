@@ -1,19 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 
 function Items(props) {
-  const [isClick, setClick] = useState(false);
-
-  function handleClick() {
-    setClick((prevValue) => {
-      return !prevValue;
-    });
-  }
-
+  // call `props.checked` function when click
   return (
-    <div onClick={handleClick}>
-      <li style={{ textDecoration: isClick ? "line-through" : "none" }}>
-        {props.text}
-      </li>
+    <div
+      onClick={() => {
+        props.checked(props.id);
+      }}
+    >
+      <li>{props.text}</li>
     </div>
   );
 }

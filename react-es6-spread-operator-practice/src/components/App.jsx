@@ -19,6 +19,14 @@ function App() {
     setItem("");
   }
 
+  function deleteItem(id) {
+    addItems((prevValue) => {
+      return prevValue.filter((item, idx) => {
+        return idx !== id;
+      });
+    });
+  }
+
   return (
     <div className="container">
       <div className="heading">
@@ -32,8 +40,8 @@ function App() {
       </div>
       <div>
         <ul>
-          {items.map((i) => (
-            <Items text={i} />
+          {items.map((item, idx) => (
+            <Items key={idx} id={idx} text={item} checked={deleteItem} />
           ))}
         </ul>
       </div>
