@@ -8,6 +8,7 @@ html {
 }
 body {
   background: #eee;
+  background-image: url("https://www.transparenttextures.com/patterns/dark-dotted-2.png");
   padding: 0 16px;
 }
 
@@ -59,6 +60,7 @@ footer p {
   position: relative;
   float: right;
   margin-right: 10px;
+  background: #fff;
   color: #f5ba13;
   border: none;
   width: 36px;
